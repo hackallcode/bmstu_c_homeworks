@@ -1,4 +1,7 @@
 ﻿  Source.cpp
-c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.1-12\hw-2.1-12\source.cpp(247): warning C4715: 'findCommonParent': not all control paths return a value
+c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.1-12\hw-2.1-12\source.cpp(50): warning C4474: 'printf_s' : too many arguments passed for format string
+  c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.1-12\hw-2.1-12\source.cpp(50): note: placeholders and their parameters expect 0 variadic arguments, but 1 were provided
+c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.1-12\hw-2.1-12\source.cpp(54): warning C4474: 'printf_s' : too many arguments passed for format string
+  c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.1-12\hw-2.1-12\source.cpp(54): note: placeholders and their parameters expect 0 variadic arguments, but 1 were provided
   HW-2.1-12.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\HW-2.1-12\Debug\HW-2.1-12.exe
   HW-2.1-12.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\HW-2.1-12\Debug\HW-2.1-12.pdb (Partial PDB)
