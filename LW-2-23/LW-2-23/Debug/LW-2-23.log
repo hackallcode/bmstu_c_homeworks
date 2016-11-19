@@ -1,0 +1,4 @@
+﻿  Source.cpp
+c:\users\vladimir\documents\visual studio 2015\projects\lw-2-23\lw-2-23\source.cpp(14): warning C4477: 'printf_s' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
+  LW-2-23.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\LW-2-23\Debug\LW-2-23.exe
+  LW-2-23.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\LW-2-23\Debug\LW-2-23.pdb (Partial PDB)
