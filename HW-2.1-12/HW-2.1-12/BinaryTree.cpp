@@ -1,34 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "BinaryTree.h"
 
 #define DEBUG
 #define SUCCESS 0
-#define NO_KEY_ERROR 1
-#define NO_MEMORY_ERROR 2
-#define NO_TREE_ERROR 3
-#define NOT_FOUND 4
-#define NO_PARENT_ERROR 5
-#define NO_FILE_ERROR 6
+#define TREE_EXIST_ERROR 2
+#define NO_MEMORY_ERROR 1
+#define NO_TREE_ERROR 2
+#define NOT_FOUND 3
+#define NO_PARENT_ERROR 4
+#define NO_FILE_ERROR 5
 
-struct Tree {
-	int key;
-	int data;
-	Tree * left;
-	Tree * right;
-};
-
-int e_NotFound(int key) {
+int e_TreeExist() {
 #ifdef DEBUG
-	printf_s("ERROR: Element not found (key = %d)!\n", key);
+	printf_s("ERROR: Tree is already initialized!\n");
 #endif // DEBUG
-	return NOT_FOUND;
-}
-
-int e_NoKey() {
-#ifdef DEBUG
-	printf_s("ERROR: Key not entered!\n");
-#endif // DEBUG
-	return NO_KEY_ERROR;
+	return TREE_EXIST_ERROR;
 }
 
 int e_NoMemory() {
@@ -45,6 +32,13 @@ int e_NoTree() {
 	return NO_TREE_ERROR;
 }
 
+int e_NotFound(key key) {
+#ifdef DEBUG
+	printf_s("ERROR: Element not found (key = %d)!\n", key);
+#endif // DEBUG
+	return NOT_FOUND;
+}
+
 int e_NoParent() {
 #ifdef DEBUG
 	printf_s("ERROR: Tree hasn't parent!\n");
@@ -59,8 +53,8 @@ int e_NoFile() {
 	return NO_FILE_ERROR;
 }
 
-int initTree(Tree ** newTree, int key = NULL, int data = NULL) {
-	if (key == NULL && data != NULL) return e_NoKey();
+int initTree(Tree ** newTree, key key, data data) {
+	if (*newTree != NULL) return e_TreeExist();
 
 	(*newTree) = (Tree *)malloc(sizeof(Tree));
 	if (*newTree == NULL) return e_NoMemory();
@@ -73,19 +67,23 @@ int initTree(Tree ** newTree, int key = NULL, int data = NULL) {
 	return SUCCESS;
 }
 
-int addChildTree(Tree * rootTree, int key, int data = NULL) {
-	if (rootTree == NULL) return e_NoTree();
-	if (key == NULL) return e_NoKey();
+int createTree(Tree ** newTree, Data * data, int dataNumber) {
+	if (*newTree != NULL) return e_TreeExist();
+	for (int i = 0; i < dataNumber; i++) {
+		int return_code = addChildTree(newTree, data[i].key, data[i].data);
+		if (return_code != SUCCESS) return return_code;
+	}
+	return SUCCESS;
+}
 
-	if (rootTree->key == NULL) {
-		rootTree->key = key;
-		rootTree->data = data;
-		rootTree->left = NULL;
-		rootTree->right = NULL;
+int addChildTree(Tree ** rootTree, key key, data data) {
+	if (*rootTree == NULL) {
+		int return_code = initTree(rootTree, key, data);
+		return return_code;
 	}
 	else {
 		Tree * previousTree = NULL;
-		Tree * currentTree = rootTree;
+		Tree * currentTree = *rootTree;
 		while (currentTree != NULL) {
 			if (key == currentTree->key) {
 				currentTree->data = data;
@@ -107,14 +105,13 @@ int addChildTree(Tree * rootTree, int key, int data = NULL) {
 			previousTree->left = currentTree;
 		else
 			previousTree->right = currentTree;
-	}
 
-	return SUCCESS;
+		return SUCCESS;
+	}
 }
 
-int removeChildTree(Tree ** rootTree, int key) {
+int removeChildTree(Tree ** rootTree, key key) {
 	if (*rootTree == NULL) return e_NoTree();
-	if (key == NULL) return e_NoKey();
 
 	Tree * previousTree = NULL;
 	Tree * currentTree = *rootTree;
@@ -193,9 +190,8 @@ int copyTree(Tree ** destTree, Tree * sourceTree) {
 	return SUCCESS;
 }
 
-int findChildTree(Tree * rootTree, int key, Tree ** destTree = NULL) {
+int findChildTree(Tree * rootTree, key key, Tree ** destTree) {
 	if (rootTree == NULL) return e_NoTree();
-	if (key == NULL) return e_NoKey();
 
 	Tree * currentTree = rootTree;
 	while (currentTree != NULL) {
@@ -218,9 +214,8 @@ int countChildTrees(Tree * rootTree) {
 	return countChildTrees(rootTree->left) + countChildTrees(rootTree->right) + 1;
 }
 
-int findCommonParent(Tree * rootTree, int key_1, int key_2, Tree ** destTree = NULL) {
+int findCommonParent(Tree * rootTree, key key_1, key key_2, Tree ** destTree) {
 	if (rootTree == NULL) return e_NoTree();
-	if (key_1 == NULL || key_2 == NULL) return e_NoKey();
 	if (key_1 == rootTree->key || key_2 == rootTree->key) return e_NoParent();
 
 	Tree * previousTree = NULL;
@@ -254,7 +249,7 @@ int fprintTree(Tree * rootTree, FILE * file) {
 	return SUCCESS;
 }
 
-int saveTree(Tree * rootTree, char * filename) {
+int saveTreeInText(Tree * rootTree, char * filename) {
 	if (rootTree == NULL) return e_NoTree();
 
 	FILE * file;
@@ -267,21 +262,61 @@ int saveTree(Tree * rootTree, char * filename) {
 	return SUCCESS;
 }
 
-int openTree(Tree ** rootTree, char * filename) {
+int openTreeInText(Tree ** rootTree, char * filename) {
+	if (*rootTree != NULL) return e_TreeExist();
+
 	FILE * file;
 	fopen_s(&file, filename, "r");
 	if (file == NULL) return e_NoFile();
 
-	if (*rootTree != NULL) removeTree(rootTree);
-	int return_code = initTree(rootTree);
-	if (return_code != SUCCESS) return return_code;
-
-	int key;
-	int data;
+	key key;
+	data data;
 	while (!feof(file)) {
 		fscanf_s(file, "%d %d", &key, &data);
-		addChildTree(*rootTree, key, data);
+		addChildTree(rootTree, key, data);
 	}
+
+	fclose(file);
+	return SUCCESS;
+}
+
+int fwriteTree(Tree * rootTree, FILE * file) {
+	if (rootTree == NULL) return SUCCESS;
+	fwrite(&rootTree->key, sizeof(key), 1, file);
+	fwrite(&rootTree->data, sizeof(data), 1, file);
+	fwriteTree(rootTree->left, file);
+	fwriteTree(rootTree->right, file);
+	return SUCCESS;
+}
+
+int saveTree(Tree * rootTree, char * filename) {
+	if (rootTree == NULL) return e_NoTree();
+
+	FILE * file;
+	fopen_s(&file, filename, "wb");
+	if (file == NULL) return e_NoFile();
+
+	fwriteTree(rootTree, file);
+
+	fclose(file);
+	return SUCCESS;
+}
+
+int openTree(Tree ** rootTree, char * filename) {
+	if (*rootTree != NULL) return e_TreeExist();
+
+	FILE * file;
+	fopen_s(&file, filename, "r");
+	if (file == NULL) return e_NoFile();
+
+	while (!feof(file)) {
+		key key;
+		data data;
+		if (fread(&key, sizeof(key), 1, file) < 1) break; // IF EOF
+		if (fread(&data, sizeof(data), 1, file) < 1) break; // IF EOF
+		int return_code = addChildTree(rootTree, key, data);
+		if (return_code != 0) return return_code;
+	};
 
 	fclose(file);
 	return SUCCESS;
