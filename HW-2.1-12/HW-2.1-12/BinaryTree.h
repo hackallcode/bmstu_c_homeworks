@@ -4,9 +4,20 @@
 #include <stdio.h>
 /**/
 
+/* Defines */
+#define DEBUG
+#define SUCCESS 0
+#define TREE_EXIST_ERROR 1
+#define NO_MEMORY_ERROR 2
+#define NO_TREE_ERROR 3
+#define NOT_FOUND 4
+#define NO_PARENT_ERROR 5
+#define NO_FILE_ERROR 6
+/**/
+
 /* TypeDefs */
-typedef int key;
-typedef int data;
+typedef int key; // MUST NOT BE POINTER
+typedef int data; // MUST NOT BE POINTER
 /**/
 
 /* Structes */
