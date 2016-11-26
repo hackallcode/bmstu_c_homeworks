@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "BinaryTree.h"
 
 int e_TreeExist() {
@@ -44,6 +45,19 @@ int e_NoFile() {
 	return NO_FILE_ERROR;
 }
 
+int compare(double x, double y) {
+	if (x < y)
+		return -1;
+	else if (x > y)
+		return 1;
+	else
+		return 0;
+}
+
+int compare(char * x, char * y) {
+	return strcmp(x, y);
+}
+
 int initTree(Tree ** newTree, key key, data data) {
 	if (*newTree != NULL) return e_TreeExist();
 
@@ -76,13 +90,13 @@ int addChildTree(Tree ** rootTree, key key, data data) {
 		Tree * previousTree = NULL;
 		Tree * currentTree = *rootTree;
 		while (currentTree != NULL) {
-			if (key == currentTree->key) {
+			if (compare(key, currentTree->key) == 0) {
 				currentTree->data = data;
 				return SUCCESS;
 			}
 			else {
 				previousTree = currentTree;
-				if (key < currentTree->key)
+				if (compare(key, currentTree->key) < 0)
 					currentTree = currentTree->left;
 				else
 					currentTree = currentTree->right;
@@ -92,7 +106,7 @@ int addChildTree(Tree ** rootTree, key key, data data) {
 		int return_code = initTree(&currentTree, key, data);
 		if (return_code != SUCCESS) return return_code;
 
-		if (key < previousTree->key)
+		if (compare(key, previousTree->key) < 0)
 			previousTree->left = currentTree;
 		else
 			previousTree->right = currentTree;
@@ -107,7 +121,7 @@ int removeChildTree(Tree ** rootTree, key key) {
 	Tree * previousTree = NULL;
 	Tree * currentTree = *rootTree;
 	while (currentTree != NULL) {
-		if (key == currentTree->key) {
+		if (compare(key, currentTree->key) == 0) {
 			if (currentTree->right == NULL) { // Without right child
 				if (previousTree == NULL) { // If root tree
 					*rootTree = currentTree->left;
@@ -143,7 +157,7 @@ int removeChildTree(Tree ** rootTree, key key) {
 		}
 		else {
 			previousTree = currentTree;
-			if (key < currentTree->key)
+			if (compare(key, currentTree->key) < 0)
 				currentTree = currentTree->left;
 			else
 				currentTree = currentTree->right;
@@ -186,12 +200,12 @@ int findChildTree(Tree * rootTree, key key, Tree ** destTree) {
 
 	Tree * currentTree = rootTree;
 	while (currentTree != NULL) {
-		if (key == currentTree->key) {
+		if (compare(key, currentTree->key) == 0) {
 			if (destTree != NULL) *destTree = currentTree;
 			return SUCCESS;
 		}
 		else {
-			if (key < currentTree->key)
+			if (compare(key, currentTree->key) < 0)
 				currentTree = currentTree->left;
 			else
 				currentTree = currentTree->right;
@@ -207,24 +221,24 @@ int countChildTrees(Tree * rootTree) {
 
 int findCommonParent(Tree * rootTree, key key_1, key key_2, Tree ** destTree) {
 	if (rootTree == NULL) return e_NoTree();
-	if (key_1 == rootTree->key || key_2 == rootTree->key) return e_NoParent();
+	if (compare(key_1, rootTree->key) == 0 || compare(key_2, rootTree->key) == 0) return e_NoParent();
 
 	Tree * previousTree = NULL;
 	Tree * currentTree = rootTree;
 	while (currentTree != NULL) {
-		if (key_1 == currentTree->key || key_2 == currentTree->key) {
+		if (compare(key_1, currentTree->key) == 0 || compare(key_2, currentTree->key) == 0) {
 			if (findChildTree(currentTree, key_1) == NOT_FOUND || findChildTree(currentTree, key_2) == NOT_FOUND) return NOT_FOUND;
 			*destTree = previousTree;
 			return SUCCESS;
 		}
 		else {
 			previousTree = currentTree;
-			if ((key_1 < currentTree->key && currentTree->key < key_2) || (key_2 < currentTree->key && currentTree->key < key_1)) {
+			if ((compare(key_1, currentTree->key) < 0 && compare(currentTree->key, key_2) < 0) || (compare(key_2, currentTree->key) < 0 && compare(currentTree->key, key_1) < 0)) {
 				if (findChildTree(currentTree, key_1) == NOT_FOUND || findChildTree(currentTree, key_2) == NOT_FOUND) return NOT_FOUND;
 				*destTree = currentTree;
 				return SUCCESS;
 			}
-			else if (key_1 < currentTree->key)
+			else if (compare(key_1, currentTree->key) < 0)
 				currentTree = currentTree->left;
 			else
 				currentTree = currentTree->right;
