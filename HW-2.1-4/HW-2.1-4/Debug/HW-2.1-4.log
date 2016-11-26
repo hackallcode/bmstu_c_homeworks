@@ -1,0 +1,6 @@
+﻿  Source.cpp
+  BinaryTree.cpp
+  Generating Code...
+c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.1-4\hw-2.1-4\binarytree.cpp(247): warning C4715: 'findCommonParent': not all control paths return a value
+  HW-2.1-4.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\HW-2.1-4\Debug\HW-2.1-4.exe
+  HW-2.1-4.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\HW-2.1-4\Debug\HW-2.1-4.pdb (Partial PDB)
