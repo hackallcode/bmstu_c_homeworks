@@ -1,6 +1,6 @@
 #pragma once
 
-#define DEBUG;
+#define DEBUG
 
 typedef int data;
 
@@ -16,7 +16,7 @@ int getLastData(Queue * queue);
 int deleteFirstData(Queue ** queue);
 int deleteQueue(Queue ** queue);
 int copyQueue(Queue ** destQueue, Queue * sourceQueue);
-int findData(Queue * queue, data data);
+Queue * findData(Queue * queue, data data);
 int countData(Queue * queue);
 int saveQueue(Queue * queue, char * filename);
 int openQueue(Queue ** queue, char * filename);
