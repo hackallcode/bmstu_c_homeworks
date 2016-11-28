@@ -68,17 +68,19 @@ int add(List ** list, data data, int number) {
 }
 
 void remove(List ** list, int number) {
+	if (*list == NULL) return;
 	if (number < 0) return;
-	if (number == 0) {
+	if (number == 0 || (*list)->next == NULL) {
+		List * temp = (*list)->next;
 		free(*list);
-		*list = NULL;
+		*list = temp;
 		return;
 	}
 
 	List * current = *list;
 	for (int i = 0; i < number - 1; i++) {
 		current = current->next;
-		if (current->next == NULL) break;
+		if (current->next->next == NULL) break;
 	}
 
 	List * temp = current->next;
