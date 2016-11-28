@@ -49,16 +49,18 @@ int addLastData(Queue ** queue, data data) {
 	return 0;
 }
 
-int getFirstData(Queue * queue) {
+int getFirstData(Queue * queue, data * destData) {
 	if (queue == NULL) return -1;
-	return queue->data;
+	*destData = queue->data;
+	return 0;
 }
 
-int getLastData(Queue * queue) {
+int getLastData(Queue * queue, data * destData) {
 	if (queue == NULL) return -1;
 	while (queue->next != NULL)
 		queue = queue->next;
-	return queue->data;
+	*destData = queue->data;
+	return 0;
 }
 
 int deleteFirstData(Queue ** queue) {
@@ -66,6 +68,7 @@ int deleteFirstData(Queue ** queue) {
 	Queue * temp = *queue;
 	*queue = (*queue)->next;
 	free(temp);
+	return 0;
 }
 
 int deleteQueue(Queue ** queue) {

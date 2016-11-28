@@ -11,8 +11,8 @@ struct Queue {
 
 int createQueue(Queue ** newQueue, data * data, int dataNumber);
 int addLastData(Queue ** queue, data data);
-int getFirstData(Queue * queue);
-int getLastData(Queue * queue);
+int getFirstData(Queue * queue, data * destData);
+int getLastData(Queue * queue, data * destData);
 int deleteFirstData(Queue ** queue);
 int deleteQueue(Queue ** queue);
 int copyQueue(Queue ** destQueue, Queue * sourceQueue);
