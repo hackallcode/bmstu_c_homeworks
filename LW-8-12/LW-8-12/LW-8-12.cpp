@@ -20,15 +20,8 @@ HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 RectList * rects = NULL;						// List of rectangles
-int left, top, right, bottom;					// Coords of painting rectangle
-BOOL isPainting = FALSE;						// Press left button now or no
-
 COLORREF borderColor = RGB(255, 0, 255);		// Color of borders
-HPEN borderPen;									// Pen for borders
 COLORREF hatchColor = RGB(255, 255, 0);			// Color of hatch
-HBRUSH hatchBrush;								// Brush for hatch
-HPEN bkPen;										// Pen for clean
-HBRUSH bkBrush;									// Brush for clean
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -36,6 +29,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 BOOL				addRect(int left, int top, int right, int bottom);
+BOOL				clearRects();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -143,13 +137,31 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	PAINTSTRUCT ps;
+	RECT rect;
+	static HDC hDC, hMemDcFrame;
+	static HBITMAP hBmpFrame;
+	static HPEN borderPen;
+	static HBRUSH hatchBrush;
+	static int left, top, right, bottom;
+	static BOOL isPainting = FALSE;
+
     switch (message)
     {
 	case WM_CREATE:
+		hDC = GetDC(hWnd);
+		GetClientRect(hWnd, &rect);
+		hMemDcFrame = CreateCompatibleDC(hDC); // DC в памяти
+		hBmpFrame = CreateCompatibleBitmap(hDC, rect.right, rect.bottom);
+		SelectObject(hMemDcFrame, hBmpFrame);
 		borderPen = CreatePen(PS_DASHDOTDOT, 1, borderColor);
 		hatchBrush = CreateHatchBrush(HS_DIAGCROSS, hatchColor);
-		bkPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-		bkBrush = CreateSolidBrush(RGB(255, 255, 255));
+		break;
+	case WM_SIZE:
+		hDC = GetDC(hWnd);
+		GetClientRect(hWnd, &rect);
+		hBmpFrame = CreateCompatibleBitmap(hDC, rect.right, rect.bottom);
+		DeleteObject(SelectObject(hMemDcFrame, hBmpFrame));
 		break;
     case WM_COMMAND:
         {
@@ -157,6 +169,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // Parse the menu selections:
             switch (wmId)
             {
+			case ID_FILE_NEW:
+				clearRects();
+				InvalidateRect(hWnd, NULL, FALSE);
+				break;
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
@@ -176,17 +192,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 		if (wParam & MK_LBUTTON)
 		{
-			HDC hdc = GetDC(hWnd);
-			
-			SelectObject(hdc, bkPen);
-			SelectObject(hdc, bkBrush);
-			Rectangle(hdc, left, top, right, bottom);
-
 			right = LOWORD(lParam);
 			bottom = HIWORD(lParam);
 			InvalidateRect(hWnd, NULL, FALSE);
-			
-			ReleaseDC(hWnd, hdc);
 		}
 		break;
 	case WM_LBUTTONUP:
@@ -195,25 +203,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
         {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-			SelectObject(hdc, borderPen);
-			SelectObject(hdc, hatchBrush);
+			hDC = BeginPaint(hWnd, &ps);
+			GetClientRect(hWnd, &rect);
+			SelectObject(hMemDcFrame, borderPen);
+			SelectObject(hMemDcFrame, hatchBrush);
+			FillRect(hMemDcFrame, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
+
 			RectList * current = rects;
 			while (current != NULL)
 			{
-				Rectangle(hdc, current->r.left, current->r.top, current->r.right, current->r.bottom);
+				Rectangle(hMemDcFrame, current->r.left, current->r.top, current->r.right, current->r.bottom);
 				current = current->next;
 			}
-			if (isPainting) Rectangle(hdc, left, top, right, bottom);
-            EndPaint(hWnd, &ps);
+			if (isPainting) 
+				Rectangle(hMemDcFrame, left, top, right, bottom);
+            
+			BitBlt(hDC, 0, 0, rect.right, rect.bottom, hMemDcFrame, 0, 0, SRCCOPY);
+			EndPaint(hWnd, &ps);
         }
         break;
     case WM_DESTROY:
 		DeleteObject(borderPen);
 		DeleteObject(hatchBrush);
-		DeleteObject(bkPen);
-		DeleteObject(bkBrush);
+		ReleaseDC(hWnd, hDC);
+		DeleteDC(hMemDcFrame);
         PostQuitMessage(0);
         break;
     default:
@@ -263,4 +276,16 @@ BOOL addRect(int left, int top, int right, int bottom) {
 		last->next->next = NULL;
 		return TRUE;
 	}
+}
+
+BOOL clearRects() {
+	RectList * current = rects;
+	RectList * next;
+	while (current != NULL) {
+		next = current->next;
+		free(current);
+		current = next;
+	}
+	rects = NULL;
+	return TRUE;
 }
