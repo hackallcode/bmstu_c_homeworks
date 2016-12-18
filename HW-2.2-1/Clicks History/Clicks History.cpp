@@ -257,7 +257,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // Store instance handle in our global variable
 
-	hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+	hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd)
@@ -412,9 +412,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				showItems(&mouseEvent->data);
 			}
 			break;
-		case ID_EDIT_DELETEALL:
-			removeAllItems();
-			break;
 		case ID_CAPTURE_START:
 			startCapture();
 			break;
@@ -467,14 +464,14 @@ INT_PTR CALLBACK Find(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)"Y");
 		hCombo = GetDlgItem(hDlg, IDC_TYPESCOMBO);
 		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_LEFT_DOWN);
-		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_LEFT_UP);
+		//SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_LEFT_UP);
 		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_LEFT_DBLCLICK);
 		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_RIGHT_DOWN);
-		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_RIGHT_UP);
+		//SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_RIGHT_UP);
 		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_RIGHT_DBLCLICK);
-		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_MIDDLE_DOWN);
-		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_MIDDLE_UP);
-		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_MIDDLE_DBLCLICK);
+		//SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_MIDDLE_DOWN);
+		//SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_MIDDLE_UP);
+		//SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)S_MIDDLE_DBLCLICK);
 	}
 	return (INT_PTR)TRUE;
 	case WM_COMMAND:

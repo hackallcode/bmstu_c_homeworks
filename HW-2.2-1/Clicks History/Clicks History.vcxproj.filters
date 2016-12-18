@@ -57,5 +57,11 @@
     <Image Include="Clicks History.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="ico00001.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="clickshi.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

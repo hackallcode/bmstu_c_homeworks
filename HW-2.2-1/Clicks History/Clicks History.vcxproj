@@ -166,6 +166,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Clicks History.ico" />
+    <Image Include="clickshi.ico" />
+    <Image Include="ico00001.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

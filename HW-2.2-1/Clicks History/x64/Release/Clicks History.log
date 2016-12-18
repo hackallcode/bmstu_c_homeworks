@@ -1,0 +1,11 @@
+﻿  Clicks History.cpp
+Clicks History.cpp(170): warning C4267: 'initializing': conversion from 'size_t' to 'INT', possible loss of data
+Clicks History.cpp(300): warning C4312: 'type cast': conversion from 'UINT' to 'HMENU' of greater size
+Clicks History.cpp(313): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Generating code
+  1 of 52 functions ( 1.9%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Clicks History.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\HW-2.2-1\x64\Release\Clicks History.exe
+  Clicks History.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\HW-2.2-1\x64\Release\Clicks History.pdb (Full PDB)

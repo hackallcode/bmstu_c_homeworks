@@ -1,49 +1,12 @@
 #include "stdafx.h"
 #include "BinaryTree.h"
 
-/* Error functions */
-
-int e_TreeExist() {
-#ifdef DEBUG
-	printf_s("ERROR: Tree is already initialized!\n");
-#endif // DEBUG
-	return TREE_EXIST_ERROR;
-}
-
-int e_NoMemory() {
-#ifdef DEBUG
-	printf_s("ERROR: Impossible allocate memory!\n");
-#endif // DEBUG
-	return NO_MEMORY_ERROR;
-}
-
-int e_NoTree() {
-#ifdef DEBUG
-	printf_s("ERROR: Tree not initialized!\n");
-#endif // DEBUG
-	return NO_TREE_ERROR;
-}
-
-int e_NotFound(KEY key) {
-#ifdef DEBUG
-	printf_s("ERROR: Element not found (key = %d)!\n", key);
-#endif // DEBUG
-	return NOT_FOUND;
-}
-
-int e_NoParent() {
-#ifdef DEBUG
-	printf_s("ERROR: Tree hasn't parent!\n");
-#endif // DEBUG
-	return NO_PARENT_ERROR;
-}
-
-int e_NoFile() {
-#ifdef DEBUG
-	printf_s("ERROR: Impossile create or open file!\n");
-#endif // DEBUG
-	return NO_FILE_ERROR;
-}
+int e_TreeExist();
+int e_NoMemory();
+int e_NoTree();
+int e_NoFile(KEY);
+int e_NoParent();
+int e_NoFile();
 
 /***************************************************************/
 /*  Change this functions, if type of key or data has changed  */
@@ -57,10 +20,6 @@ int compare(double x, double y) {
 		return 1;
 	else
 		return 0;
-}
-
-int compare(char * x, char * y) { 
-	return strcmp(x, y);
 }
 
 // Data setting function
@@ -117,6 +76,50 @@ int freadData(DATA * data, FILE * file) {
 /*********************************/
 /*  End of changeable functions  */
 /*********************************/
+
+/* Error functions */
+
+int e_TreeExist() {
+#ifdef DEBUG
+	printf_s("ERROR: Tree is already initialized!\n");
+#endif // DEBUG
+	return TREE_EXIST_ERROR;
+}
+
+int e_NoMemory() {
+#ifdef DEBUG
+	printf_s("ERROR: Impossible allocate memory!\n");
+#endif // DEBUG
+	return NO_MEMORY_ERROR;
+}
+
+int e_NoTree() {
+#ifdef DEBUG
+	printf_s("ERROR: Tree not initialized!\n");
+#endif // DEBUG
+	return NO_TREE_ERROR;
+}
+
+int e_NotFound(KEY key) {
+#ifdef DEBUG
+	printf_s("ERROR: Element not found (key = %d)!\n", key);
+#endif // DEBUG
+	return NOT_FOUND;
+}
+
+int e_NoParent() {
+#ifdef DEBUG
+	printf_s("ERROR: Tree hasn't parent!\n");
+#endif // DEBUG
+	return NO_PARENT_ERROR;
+}
+
+int e_NoFile() {
+#ifdef DEBUG
+	printf_s("ERROR: Impossile create or open file!\n");
+#endif // DEBUG
+	return NO_FILE_ERROR;
+}
 
 /* All functions */
 

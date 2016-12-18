@@ -1,2 +1,7 @@
-﻿  Clicks History.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\HW-2.2-1\Debug\Clicks History.exe
+﻿  Clicks History.cpp
+c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.2-1\clicks history\clicks history.cpp(313): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.2-1\clicks history\clicks history.cpp(604): warning C4715: 'restartCapture': not all control paths return a value
+c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.2-1\clicks history\clicks history.cpp(651): warning C4715: 'addItemIndexes': not all control paths return a value
+c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\hw-2.2-1\clicks history\clicks history.cpp(824): warning C4715: 'saveMouseEventsDlg': not all control paths return a value
+  Clicks History.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\HW-2.2-1\Debug\Clicks History.exe
   Clicks History.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\HW-2.2-1\Debug\Clicks History.pdb (Full PDB)
