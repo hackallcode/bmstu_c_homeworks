@@ -1,4 +1,0 @@
-﻿  Source.cpp
-c:\users\vladimir\documents\visual studio 2015\projects\bmstu-projects\lw-6-8\lw-6-8\source.cpp(98): warning C4715: 'insertDeposit': not all control paths return a value
-  LW-6-8.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\LW-6-8\Debug\LW-6-8.exe
-  LW-6-8.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\BMSTU-Projects\LW-6-8\Debug\LW-6-8.pdb (Partial PDB)

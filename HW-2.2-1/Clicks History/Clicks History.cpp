@@ -725,47 +725,31 @@ BOOL WINAPI addListViewItem(ME_data * data) {
 //
 BOOL filterItems(filterParam param, int value) {
 	ListView_DeleteAllItems(hListView);
-	TREE * resultTree;
+	TREE * resultTree = NULL;
+	TREE * searchTree = NULL;
 	switch (param)
 	{
 	case ID:
-		if (findChildTree(mouseEvents, value, &resultTree) != SUCCESS) {
-			notFoundErr();
-			return FALSE;
-		}
-		for (int i = 0; i < resultTree->data.dataNumber; i++) {
-			addListViewItem(&resultTree->data.data[i]);
-		}
+		searchTree = mouseEvents;
 		break;
 	case TYPE:
-		if (findChildTree(ME_types, value, &resultTree) != SUCCESS) {
-			notFoundErr();
-			return FALSE;
-		}
-		for (int i = 0; i < resultTree->data.dataNumber; i++) {
-			addListViewItem(&resultTree->data.data[i]);
-		}
+		searchTree = ME_types;
 		break;
 	case X:
-		if (findChildTree(ME_X, value, &resultTree) != SUCCESS) {
-			notFoundErr();
-			return FALSE;
-		}
-		for (int i = 0; i < resultTree->data.dataNumber; i++) {
-			addListViewItem(&resultTree->data.data[i]);
-		}
+		searchTree = ME_X;
 		break;
 	case Y:
-		if (findChildTree(ME_Y, value, &resultTree) != SUCCESS) {
-			notFoundErr();
-			return FALSE;
-		}
-		for (int i = 0; i < resultTree->data.dataNumber; i++) {
-			addListViewItem(&resultTree->data.data[i]);
-		}
+		searchTree = ME_Y;
 		break;
 	default:
-		break;
+		return FALSE;
+	}
+	if (findChildTree(searchTree, value, &resultTree) != SUCCESS) {
+		notFoundErr();
+		return FALSE;
+	}
+	for (int i = 0; i < resultTree->data.dataNumber; i++) {
+		addListViewItem(&resultTree->data.data[i]);
 	}
 	return TRUE;
 }

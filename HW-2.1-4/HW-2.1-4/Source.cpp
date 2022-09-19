@@ -94,30 +94,6 @@ int main() {
 	printf_s("findCommonParent(tree_2, 20, 42, &temp_tree): %d\n", return_code);
 	printf_s("temp_tree->key: %d, temp_tree->data: %d\n", temp_tree->key, temp_tree->data);
 
-	// Test of saveTreeInText()
-	printf_s("\n");
-	return_code = saveTreeInText(tree_2, "tree.txt");
-	printf_s("saveTreeInText(tree_2, \"tree.txt\"): %d\n", return_code);
-
-	// Test of openTreeInText()
-	printf_s("\n");
-	return_code = removeTree(&tree_1);
-	printf_s("removeTree(&tree_1): %d\n", return_code);
-	return_code = openTreeInText(&tree_1, "tree.txt");
-	printf_s("openTreeInText(&tree_1, \"tree.txt\"): %d\n", return_code);
-	if (return_code != SUCCESS) {
-		system("pause");
-		return return_code;
-	}
-
-	// Test of findCommonParent()
-	printf_s("\n");
-	return_code = addChildTree(&tree_1, 42, 42 * 2);
-	printf_s("addChildTree(&tree_1, 42, 42*2): %d\n", return_code);
-	return_code = findCommonParent(tree_1, 20, 42, &temp_tree);
-	printf_s("findCommonParent(tree_2, 20, 42, &temp_tree): %d\n", return_code);
-	printf_s("temp_tree->key: %d, temp_tree->data: %d\n", temp_tree->key, temp_tree->data);
-
 	printf_s("\n");
 	system("pause");
 	return 0;

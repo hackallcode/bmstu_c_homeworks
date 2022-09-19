@@ -1,7 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "BinaryTree.h"
+
+/* Error functions */
 
 int e_TreeExist() {
 #ifdef DEBUG
@@ -45,6 +44,11 @@ int e_NoFile() {
 	return NO_FILE_ERROR;
 }
 
+/***************************************************************/
+/*  Change this functions, if type of key or data has changed  */
+/***************************************************************/
+
+// Keys compare function
 int compare(double x, double y) {
 	if (x < y)
 		return -1;
@@ -58,14 +62,47 @@ int compare(char * x, char * y) {
 	return strcmp(x, y);
 }
 
+// Data setting function
+void nullData(data * data) {
+	*data = NULL;
+}
+
+int clearData(data * data) {
+	nullData(data);
+	return SUCCESS;
+}
+
+int setData(data * destData, data sourceData) {
+	int return_code = clearData(destData);
+	if (return_code != SUCCESS) return return_code;
+	*destData = sourceData;
+	return SUCCESS;
+}
+
+// Work with data in files
+void fwriteData(data data, FILE * file) {
+	fwrite(&data, sizeof(int), 1, file);
+}
+
+int freadData(data * data, FILE * file) {
+	return fread(data, sizeof(int), 1, file);
+}
+
+/*********************************/
+/*  End of changeable functions  */
+/*********************************/
+
+/* All functions */
+
 int initTree(Tree ** newTree, key key, data data) {
 	if (*newTree != NULL) return e_TreeExist();
-
 	(*newTree) = (Tree *)malloc(sizeof(Tree));
 	if (*newTree == NULL) return e_NoMemory();
 
 	(*newTree)->key = key;
-	(*newTree)->data = data;
+	nullData(&(*newTree)->data);
+	int return_code = setData(&(*newTree)->data, data);
+	if (return_code != SUCCESS) return return_code;
 	(*newTree)->left = NULL;
 	(*newTree)->right = NULL;
 
@@ -91,8 +128,10 @@ int addChildTree(Tree ** rootTree, key key, data data) {
 		Tree * currentTree = *rootTree;
 		while (currentTree != NULL) {
 			if (compare(key, currentTree->key) == 0) {
-				currentTree->data = data;
-				return SUCCESS;
+				int return_code = clearData(&currentTree->data);
+				if (return_code != SUCCESS) return return_code;
+				return_code = setData(&currentTree->data, data);
+				return return_code;
 			}
 			else {
 				previousTree = currentTree;
@@ -133,6 +172,8 @@ int removeChildTree(Tree ** rootTree, key key) {
 						previousTree->right = currentTree->left;
 				}
 
+				int return_code = clearData(&currentTree->data);
+				if (return_code != SUCCESS) return return_code;
 				free(currentTree);
 			}
 			else { // With right tree
@@ -149,8 +190,13 @@ int removeChildTree(Tree ** rootTree, key key) {
 					currentTree->right = minRightTree->right;
 
 				currentTree->key = minRightTree->key;
-				currentTree->data = minRightTree->data;
+				int return_code = clearData(&currentTree->data);
+				if (return_code != SUCCESS) return return_code;
+				return_code = setData(&currentTree->data, minRightTree->data);
+				if (return_code != SUCCESS) return return_code;
 
+				return_code = clearData(&minRightTree->data);
+				if (return_code != SUCCESS) return return_code;
 				free(minRightTree);
 			}
 			return SUCCESS;
@@ -171,6 +217,8 @@ int removeTree(Tree ** rootTree) {
 	if (*rootTree == NULL) return SUCCESS;
 	removeTree(&(*rootTree)->left);
 	removeTree(&(*rootTree)->right);
+	int return_code = clearData(&(*rootTree)->data);
+	if (return_code != SUCCESS) return return_code;
 	free(*rootTree);
 	*rootTree = NULL;
 	return SUCCESS;
@@ -246,49 +294,10 @@ int findCommonParent(Tree * rootTree, key key_1, key key_2, Tree ** destTree) {
 	}
 }
 
-int fprintTree(Tree * rootTree, FILE * file) {
-	if (rootTree == NULL) return SUCCESS;
-	fprintf(file, "%d %d\n", rootTree->key, rootTree->data);
-	fprintTree(rootTree->left, file);
-	fprintTree(rootTree->right, file);
-	return SUCCESS;
-}
-
-int saveTreeInText(Tree * rootTree, char * filename) {
-	if (rootTree == NULL) return e_NoTree();
-
-	FILE * file;
-	fopen_s(&file, filename, "w");
-	if (file == NULL) return e_NoFile();
-
-	fprintTree(rootTree, file);
-
-	fclose(file);
-	return SUCCESS;
-}
-
-int openTreeInText(Tree ** rootTree, char * filename) {
-	if (*rootTree != NULL) return e_TreeExist();
-
-	FILE * file;
-	fopen_s(&file, filename, "r");
-	if (file == NULL) return e_NoFile();
-
-	key key;
-	data data;
-	while (!feof(file)) {
-		fscanf_s(file, "%d %d", &key, &data);
-		addChildTree(rootTree, key, data);
-	}
-
-	fclose(file);
-	return SUCCESS;
-}
-
 int fwriteTree(Tree * rootTree, FILE * file) {
 	if (rootTree == NULL) return SUCCESS;
 	fwrite(&rootTree->key, sizeof(key), 1, file);
-	fwrite(&rootTree->data, sizeof(data), 1, file);
+	fwriteData(rootTree->data, file);
 	fwriteTree(rootTree->left, file);
 	fwriteTree(rootTree->right, file);
 	return SUCCESS;
@@ -318,7 +327,7 @@ int openTree(Tree ** rootTree, char * filename) {
 		key key;
 		data data;
 		if (fread(&key, sizeof(key), 1, file) < 1) break; // IF EOF
-		if (fread(&data, sizeof(data), 1, file) < 1) break; // IF EOF
+		if (freadData(&data, file) < 1) break;
 		int return_code = addChildTree(rootTree, key, data);
 		if (return_code != 0) return return_code;
 	};

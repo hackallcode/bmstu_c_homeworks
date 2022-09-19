@@ -1,4 +1,0 @@
-﻿  Source.cpp
-Source.cpp(105): warning C4313: 'printf_s'  : '%x' in format string conflicts with argument 1 of type 'DepositsList *'
-Source.cpp(112): warning C4313: 'printf_s'  : '%x' in format string conflicts with argument 1 of type 'DepositsList *'
-  LW-6-12.vcxproj -> C:\Users\Vladimir\Documents\Visual Studio 2015\Projects\LW-6-12\x64\Debug\LW-6-12.exe

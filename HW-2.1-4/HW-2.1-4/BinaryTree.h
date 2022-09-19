@@ -2,6 +2,8 @@
 
 /* Includes */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 /**/
 
 /* Defines */
@@ -17,7 +19,7 @@
 
 /* TypeDefs */
 typedef int key; // MUST NOT BE POINTER
-typedef int data; // MUST NOT BE POINTER
+typedef int data;
 /**/
 
 /* Structes */
@@ -44,6 +46,4 @@ int countChildTrees(Tree * rootTree);
 int findCommonParent(Tree * rootTree, key key_1, key key_2, Tree ** destTree = NULL);
 int saveTree(Tree * rootTree, char * filename);
 int openTree(Tree ** rootTree, char * filename);
-int saveTreeInText(Tree * rootTree, char * filename);
-int openTreeInText(Tree ** rootTree, char * filename);
 /**/
